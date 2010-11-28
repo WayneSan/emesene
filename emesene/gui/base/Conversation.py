@@ -131,18 +131,15 @@ class Conversation(object):
 
     def on_video_call(self):
         '''called when the user is requesting a video-only call'''
-        account = self.members[0]
-        self.session.call_invite(self.cid, account, 0) # 0 = Video only
+        raise NotImplementedError
 
     def on_voice_call(self):
         '''called when the user is requesting an audio-only call'''
-        account = self.members[0]
-        self.session.call_invite(self.cid, account, 1) # 1 = Audio only
+        raise NotImplementedError
 
     def on_av_call(self):
         '''called when the user is requesting an audio-video call'''
-        account = self.members[0]
-        self.session.call_invite(self.cid, account, 2) # 2 = Audio/Video
+        raise NotImplementedError
 
     def on_clean(self):
         '''called when the clean button is clicked'''
@@ -288,6 +285,10 @@ class Conversation(object):
             self.play_nudge()
 
         self.first = False
+
+    def on_user_typing(self, account):
+        '''method called when a someone is typing'''
+        raise NotImplementedError
 
     def _get_icon(self):
         '''return the icon that represent the current status of the
