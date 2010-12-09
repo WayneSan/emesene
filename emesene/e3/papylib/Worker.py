@@ -43,7 +43,7 @@ if os.path.exists(papypath):
     sys.path.insert(0, papypath)
 
 try:
-    REQ_VER = (0, 5, 2)
+    REQ_VER = (0, 5, 4)
 
     import papyon
     import papyon.event
@@ -56,6 +56,8 @@ try:
             raise Exception
     elif papyver[1] < REQ_VER[1]:
         raise Exception
+except ImportError, ie:
+    print ie
 except Exception, e:
     log.exception("You need at least python-papyon(>=%s.%s.%s) to be installed " \
                   "in order to use this extension" % REQ_VER)
