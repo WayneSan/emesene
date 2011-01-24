@@ -20,8 +20,8 @@
 import gtk
 import pango
 import gobject
+import extension
 
-import e3.base
 import gui
 
 class FileTransferWidget(gtk.HBox):
@@ -67,6 +67,8 @@ class FileTransferWidget(gtk.HBox):
         self.buttons = []
         self.show_all()
         self.tooltip = FileTransferTooltip(self.event_box, self.transfer)
+
+        self.notifier = extension.get_default('notificationGUI')
 
         self.event_box.connect('event', self._on_progressbar_event)
 
@@ -115,7 +117,7 @@ class FileTransferWidget(gtk.HBox):
 
         self.buttons = []
 
-        if state == self.transfer.WAITING and self.transfer.sender != 'Me':
+        if state == self.transfer.WAITING and self.transfer.sender != 'Me':        
             button = gtk.Button(None, None)
             button.set_image(self.__get_button_img(gtk.STOCK_APPLY))
             button.connect('clicked', self._on_accept_clicked)
@@ -239,10 +241,14 @@ class FileTransferTooltip(gtk.Window):
         if self.transfer.preview is not None:
             pixbuf = gtk.gdk.pixbuf_new_from_data(self.transfer.preview)
         else:
-            pixbuf = None
+            pixbuf = gtk.gdk.pixbuf_new_from_file(gui.theme.transfer_success)
         #amsn sends a big. black preview? :S
-        if pixbuf and pixbuf.get_height() <= 96 and pixbuf.get_width() <= 96:
-            self.image.set_from_pixbuf(pixbuf)
+        if pixbuf:
+            if pixbuf.get_height() <= 96 and pixbuf.get_width() <= 96:
+                self.image.set_from_pixbuf(pixbuf)
+            else:
+                pixbuf.scale_simple(96, 96, gtk.gdk.INTERP_BILINEAR)
+                self.image.set_from_pixbuf(pixbuf)
 
         # set the location of the tooltip
         x, y = self.find_position(o_coords, view.window)
